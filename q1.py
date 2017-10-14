@@ -32,20 +32,30 @@ def main():
 
     nn = Approximation()
 
-    nn.select_model(
-        train_x = preprocessor.train_x,
-        train_y = preprocessor.train_y,
-        k_fold = k_fold,
-        epochs = epochs,
-        batch_size = batch_size,
-        hidden_neurons = hidden_neurons,
-        learning_rate = learning_rate
-    )
+    if k_fold > 0:
+        list_train_cost, list_test_cost, list_test_accuracy, min_err = nn.select_model(
+            train_x = preprocessor.train_x,
+            train_y = preprocessor.train_y,
+            k_fold = k_fold,
+            epochs = epochs,
+            batch_size = batch_size,
+            hidden_neurons = hidden_neurons,
+            learning_rate = learning_rate
+        )
+        # TODO:
+        # Plot K-fold graphs
 
+    else:
+        nn.set_x_train(preprocessor.train_x)
+        nn.set_y_train(preprocessor.train_y)
+    
     nn.set_x_test(preprocessor.test_x)
     nn.set_y_test(preprocessor.test_y)
+    nn.create_model(hidden_neurons, learning_rate)
     train_cost, test_cost, accuracy, min_err = nn.train_model(epochs=epochs, batch_size=batch_size)
 
+    # Plot training error against number of epoch
+    # Plot test error of prediction against number of epoch
     plot_graph(
         title='Training and Test Errors at Alpha = %.3f'%learning_rate,
         x_label="Epochs",
@@ -55,6 +65,7 @@ def main():
         data_labels=["train", "test"],
     )
 
+    # Plot accuracy against number of epoch
     plot_graph(
         title="Test Accuracy",
         x_label="Epochs",
