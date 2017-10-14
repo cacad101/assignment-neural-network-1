@@ -1,7 +1,7 @@
 """
-Script for Question 1:
+Question 1:
 Design a 3-layer feedforward neural network consisting of a hidden-layer of 30 neurons.
-Use mini-batch gradient descent (with batch size of 32 and learning rate alpha = 10−4) to
+Use mini-batch gradient descent (with batch size of 32 and learning rate alpha = 10e−4) to
 train the network. Use up to about 1000 epochs for this problem.
 a) Plot the training error against number of epochs for the 3-layer network.
 b) Plot the final test errors of prediction by the network.
@@ -14,7 +14,7 @@ from housing_training.approximation import Approximation
 from housing_visualization.visualization import plot_graph
 
 def main():
-    print("Start question 1")
+    print("Start Question 1")
     np.random.seed(10)
 
     k_fold = 5
@@ -60,7 +60,7 @@ def main():
         title='Training and Test Errors at Alpha = %.3f'%learning_rate,
         x_label="Epochs",
         y_label="MSE",
-        x_vals=[range(epochs),range(epochs)],
+        x_val=range(epochs),
         y_vals=[train_cost, test_cost],
         data_labels=["train", "test"],
     )
@@ -70,7 +70,7 @@ def main():
         title="Test Accuracy",
         x_label="Epochs",
         y_label="Accuracy",
-        x_vals=[range(epochs)],
+        x_val=range(epochs),
         y_vals=[accuracy],
         data_labels=["Test Accuracy"],
     )

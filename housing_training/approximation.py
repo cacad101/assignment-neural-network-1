@@ -22,137 +22,6 @@ class Approximation:
         self.test_x = None
         self.test_y = None
 
-        
-    def create_model(self, list_of_neurons_on_hidden_layer, learning_rate):
-        """ Create model from list of neurons """
-        no_features = self.train_x.shape[1] 
-        
-        input_x = T.matrix('x') # data sample
-        expected_y = T.matrix('d') # desired output
-
-        alpha = theano.shared(learning_rate, utils.FLOAT_X) 
-
-        # initialize weights and biases for hidden layer(s) and output layer
-        list_of_neurons_on_hidden_layer
-        weights = []
-        biases = []
-        prev_layer = no_features
-
-        for cur_layer in list_of_neurons_on_hidden_layer:
-            weights.append(utils.get_weigh(prev_layer, cur_layer))
-            biases.append(utils.get_bias(cur_layer))
-            prev_layer = cur_layer
-
-        weights.append(utils.get_weigh(1,prev_layer)[0])
-        biases.append(utils.get_bias(1)[0])
-
-        # Define mathematical expression:
-        h_out = input_x
-        for w,b in zip(weights, biases):
-            h_out = T.nnet.sigmoid(T.dot(h_out, w) + b)
-
-        cost = T.abs_(T.mean(T.sqr(expected_y - h_out)))
-        accuracy = T.mean(expected_y - h_out)
-
-        #define gradients
-        updates = []
-        grad = T.grad(cost, weights + biases)
-        grad_w = grad[:len(grad)//2]
-        grad_b = grad[len(grad)//2:]
-        for i in range(len(weights)):
-            updates.append([weights[i], weights[i] - alpha * grad_w[i]])
-            updates.append([biases[i], biases[i] - alpha * grad_b[i]])
-
-        self.train = theano.function(
-            inputs = [input_x, expected_y],
-            outputs = cost,
-            updates = updates,
-            allow_input_downcast=True
-            )
-
-        self.test = theano.function(
-            inputs = [input_x, expected_y],
-            outputs = [h_out, cost, accuracy],
-            allow_input_downcast=True
-            )
-
-        # ############################################################################################################
-        # w_o = theano.shared(np.random.randn(list_of_neurons_on_hidden_layer[0])*.01, utils.FLOAT_X ) 
-        # b_o = theano.shared(np.random.randn()*.01, utils.FLOAT_X)
-        # w_h1 = theano.shared(np.random.randn(no_features, list_of_neurons_on_hidden_layer[0])*.01, utils.FLOAT_X )
-        # b_h1 = theano.shared(np.random.randn(list_of_neurons_on_hidden_layer[0])*0.01, utils.FLOAT_X)
-
-        # # learning rate
-        # alpha = theano.shared(learning_rate, utils.FLOAT_X) 
-
-        # #Define mathematical expression:
-        # h1_out = T.nnet.sigmoid(T.dot(input_x, w_h1) + b_h1)
-        # y = T.dot(h1_out, w_o) + b_o
-
-        # cost = T.mean(T.sqr(expected_y - y))
-        # accuracy = (T.mean(expected_y - y))
-
-        # #define gradients
-        # dw_o, db_o, dw_h, db_h = T.grad(cost, [w_o, b_o, w_h1, b_h1])
-
-        # self.train = theano.function(
-        #     inputs = [input_x, expected_y],
-        #     outputs = cost,
-        #     updates = [[w_o, w_o - alpha*dw_o],
-        #            [b_o, b_o - alpha*db_o],
-        #            [w_h1, w_h1 - alpha*dw_h],
-        #            [b_h1, b_h1 - alpha*db_h]],
-        #     allow_input_downcast=True
-        #     )
-
-        # self.test = theano.function(
-        #     inputs = [input_x, expected_y],
-        #     outputs = [y, cost, accuracy],
-        #     allow_input_downcast=True
-        #     )
-        ############################################################################################################
-
-
-    def train_model(self, epochs, batch_size):
-        """ train model based on self.train_x and self.train_y """
-        train_cost = np.zeros(epochs)
-        test_cost = np.zeros(epochs)
-        test_accuracy = np.zeros(epochs)
-
-        min_error = 1e+15
-
-        for iter in range(epochs):
-            self.train_x, self.train_y = utils.shuffle_data(self.train_x, self.train_y)
-            train_cost[iter] = self.training_iter(batch_size)
-            _, test_cost[iter], test_accuracy[iter] = self.test_model()
-
-            if iter%100 == 0:
-                print("Iter: %s\n MSE: %s\n Test Accuracy: %s" %(iter, train_cost[iter], test_accuracy[iter]))
-            
-            if test_cost[iter] < min_error:
-                min_error = test_cost[iter]
-        
-        return train_cost, test_cost, test_accuracy, min_error
-
-    def training_iter(self, batch_size):
-        cost = []
-
-        for i in range(0, len(self.train_x), batch_size):
-            end = i + batch_size
-            if end > len(self.train_x):
-                end = len(self.train_x)
-
-            train_x_batch = self.train_x[i:end]
-            train_y_batch = self.train_y[i:end]
-
-            cost.append(self.train(train_x_batch, np.transpose(train_y_batch)))
-            
-        return np.mean(cost)
-
-    def test_model(self):
-        """ test model using independent test data """
-        return self.test(self.test_x, np.transpose(self.test_y))
-
     def select_model(self, train_x, train_y, k_fold, epochs, batch_size, hidden_neurons, learning_rate):
         """ select model using K-Fold cross validation """
         data_fold_x = []
@@ -191,6 +60,98 @@ class Approximation:
         self.train_x = best_train_x
         self.train_y = best_train_y
         return list_train_cost, list_test_cost, list_test_accuracy, min_err
+    
+    def create_model(self, list_of_neurons_on_hidden_layer, learning_rate):
+        """ Create model from list of neurons """
+        no_features = self.train_x.shape[1] 
+        
+        input_x = T.matrix('x') # data sample
+        expected_y = T.matrix('d') # desired output
+
+        alpha = theano.shared(learning_rate, utils.FLOAT_X) 
+
+        # initialize weights and biases for hidden layer(s) and output layer
+        weights = []
+        biases = []
+        prev_layer = no_features
+
+        for cur_layer in list_of_neurons_on_hidden_layer + [1]:
+            weights.append(utils.get_weigh(prev_layer, cur_layer))
+            biases.append(utils.get_bias(cur_layer))
+            prev_layer = cur_layer
+
+        # Define mathematical expression:
+        h_out = input_x
+        for w,b in zip(weights[:-1], biases[:-1]):
+            h_out = T.nnet.sigmoid(T.dot(h_out, w) + b)
+
+        h_out = T.dot(h_out, weights[-1]) + biases[-1]
+
+        cost = T.abs_(T.mean(T.sqr(expected_y - h_out)))
+        accuracy = T.mean(expected_y - h_out)
+
+        #define gradients
+        updates = []
+        grad = T.grad(cost, weights + biases)
+        grad_w = grad[:len(grad)//2]
+        grad_b = grad[len(grad)//2:]
+        for i in range(len(weights)):
+            updates.append([weights[i], weights[i] - alpha * grad_w[i]])
+            updates.append([biases[i], biases[i] - alpha * grad_b[i]])
+
+        self.train = theano.function(
+            inputs = [input_x, expected_y],
+            outputs = cost,
+            updates = updates,
+            allow_input_downcast=True
+            )
+
+        self.test = theano.function(
+            inputs = [input_x, expected_y],
+            outputs = [h_out, cost, accuracy],
+            allow_input_downcast=True
+            )
+
+    def train_model(self, epochs, batch_size):
+        """ train model based on self.train_x and self.train_y """
+        train_cost = np.zeros(epochs)
+        test_cost = np.zeros(epochs)
+        test_accuracy = np.zeros(epochs)
+
+        min_error = 1e+15
+
+        for iter in range(epochs):
+            self.train_x, self.train_y = utils.shuffle_data(self.train_x, self.train_y)
+            train_cost[iter] = self.training_iter(batch_size)
+            _, test_cost[iter], test_accuracy[iter] = self.test_model()
+
+            if iter%100 == 0:
+                print("Iter: %s\n MSE: %s\n Test Accuracy: %s" %(iter, train_cost[iter], test_accuracy[iter]))
+                print("----------------------------------------------------------------------")
+            
+            if test_cost[iter] < min_error:
+                min_error = test_cost[iter]
+        
+        return train_cost, test_cost, test_accuracy, min_error
+
+    def training_iter(self, batch_size):
+        cost = []
+
+        for i in range(0, len(self.train_x), batch_size):
+            end = i + batch_size
+            if end > len(self.train_x):
+                end = len(self.train_x)
+
+            train_x_batch = self.train_x[i:end]
+            train_y_batch = self.train_y[i:end]
+
+            cost.append(self.train(train_x_batch, train_y_batch))
+            
+        return np.mean(cost)
+
+    def test_model(self):
+        """ test model using independent test data """
+        return self.test(self.test_x, self.test_y)
 
     def set_x_train(self, train_x):
         """ self.train_x setter """
