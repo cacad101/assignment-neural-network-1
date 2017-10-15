@@ -45,7 +45,7 @@ class SoftmaxNeuralNetwork:
 
         # for output layer
         weights.append(
-            self.init_weight(previous_layer, num_features)
+            self.init_weight(previous_layer, num_features, is_logistic_function=False)
         )
 
         biases.append(
@@ -67,18 +67,19 @@ class SoftmaxNeuralNetwork:
             prev_input = calculation
 
         # last output layer, use softmax function
+        # previously layers are used to get the intermediate value between neurons
+
         calculation = T.nnet.softmax(T.dot(prev_input, weights[len(weights) - 1]) +
                                      biases[len(biases) - 1])
         layers.append(calculation)
 
         y_prediction = T.argmax(calculation, axis=1)
 
-        sum_sqr_weights = T.sqr(weights[0])
-
-        for i in range(1, len(weights)):
+        sum_sqr_weights = 0
+        for i in range(0, len(weights)):
             sum_sqr_weights += T.sum(T.sqr(weights[i]))
 
-        cost = T.mean(T.nnet.categorical_crossentropy(calculation, y_output)) + decay * T.sum(sum_sqr_weights)
+        cost = T.mean(T.nnet.categorical_crossentropy(calculation, y_output)) + decay * (sum_sqr_weights)
         params = list(weights + biases)
         updates = self.sgd(cost=cost, params=params)
 
@@ -98,7 +99,7 @@ class SoftmaxNeuralNetwork:
     def init_bias(self, n):
         return theano.shared(np.zeros(n), theano.config.floatX)
 
-    def init_weight(self, n_in, n_out, is_logistic_function=False):
+    def init_weight(self, n_in, n_out, is_logistic_function=True):
 
         weight = np.random.uniform(
             size=(n_in, n_out),
