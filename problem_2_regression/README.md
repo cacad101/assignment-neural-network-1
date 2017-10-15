@@ -1,4 +1,5 @@
 # CZ4042 Neural Network - Assignment 1
+
 Part B: Approximation Problem
 
 ## Getting Started
@@ -10,10 +11,14 @@ Part B: Approximation Problem
 
 ### Running
 
-- To run question 1: `python q1.py`
-- To run question 2: `python q2.py`
-- To run question 3: `python q3.py`
-- To run question 4: `python q4.py`
+- Using python:
+  - To run question 1: `python q1.py`
+  - To run question 2: `python q2.py`
+  - To run question 3: `python q3.py`
+  - To run question 4: `python q4.py`
+- Using jupyter:
+  - execute `jupyter notebook` on the current directory.
+  - execute code in [Approximation Problem](approximation_problem.ipynb).
 
 ## Content
 
