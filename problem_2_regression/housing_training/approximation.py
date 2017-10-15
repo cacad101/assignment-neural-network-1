@@ -4,6 +4,7 @@ Training Data:
 - Mini-batch gradient descent
 """
 
+import time
 import numpy as np
 import theano
 import theano.tensor as T
@@ -112,7 +113,7 @@ class Approximation:
             allow_input_downcast=True
             )
 
-    def train_model(self, epochs, batch_size):
+    def train_model(self, epochs, batch_size, verbose=False):
         """ train model based on self.train_x and self.train_y """
         train_cost = np.zeros(epochs)
         test_cost = np.zeros(epochs)
@@ -120,18 +121,30 @@ class Approximation:
 
         min_error = 1e+15
 
+        start_time = time.time()
+
         for iter in range(epochs):
             self.train_x, self.train_y = utils.shuffle_data(self.train_x, self.train_y)
             train_cost[iter] = self.training_iter(batch_size)
             _, test_cost[iter], test_accuracy[iter] = self.test_model()
 
-            if iter%100 == 0:
-                print("Iter: %s\n MSE: %s\n Test Accuracy: %s" %(iter, train_cost[iter], test_accuracy[iter]))
-                print("----------------------------------------------------------------------")
+            if iter%1000 == 0:
+                if verbose:
+                    print("Iter: ", iter)
+                    print("- Train MSE: ", train_cost[iter])
+                    print("- Test MSE: ", test_cost[iter])
+                    print("----------------------------------------------------------------------")
             
             if test_cost[iter] < min_error:
                 min_error = test_cost[iter]
         
+        exec_time = time.time() - start_time
+        if verbose:
+            print("Finished training --> Minimum Error: ", min_error)
+            print("- Epoch: ", epochs)
+            print("- Batch Size: ", batch_size)
+            print("----------------------------------------------------------------------")
+
         return train_cost, test_cost, test_accuracy, min_error
 
     def training_iter(self, batch_size):

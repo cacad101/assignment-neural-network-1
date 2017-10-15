@@ -16,9 +16,9 @@ def main():
     print("Start Question 4")
     np.random.seed(10)
 
-    k_fold = 0
-    hidden_neuron_list = [[40], [40, 20], [40, 20, 20]]
-    batch_size = 4048
+    k_fold = 5
+    hidden_neuron_list = [[60], [60, 20], [60, 20, 20]]
+    batch_size = 32
     learning_rate = 1e-4
     epochs = 1000
     data_dir = "housing_data/cal_housing.data"
@@ -53,7 +53,7 @@ def main():
         nn.set_x_test(preprocessor.test_x)
         nn.set_y_test(preprocessor.test_y)
         nn.create_model(hidden_neurons, learning_rate)
-        train_cost, test_cost, test_accuracy, min_err = nn.train_model(epochs=epochs, batch_size=batch_size)
+        train_cost, test_cost, test_accuracy, min_err = nn.train_model(epochs=epochs, batch_size=batch_size, verbose=True)
         list_train_cost.append(train_cost)
         list_test_cost.append(test_cost)
         list_test_accuracy.append(test_accuracy)

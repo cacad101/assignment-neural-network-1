@@ -55,7 +55,7 @@ def main():
         nn.set_x_test(preprocessor.test_x)
         nn.set_y_test(preprocessor.test_y)
         nn.create_model(hidden_neurons, learning_rate)
-        train_cost, test_cost, test_accuracy, min_err = nn.train_model(epochs=epochs, batch_size=batch_size)
+        train_cost, test_cost, test_accuracy, min_err = nn.train_model(epochs=epochs, batch_size=batch_size, verbose=True)
         list_train_cost.append(train_cost)
         list_test_cost.append(test_cost)
         list_test_accuracy.append(test_accuracy)
