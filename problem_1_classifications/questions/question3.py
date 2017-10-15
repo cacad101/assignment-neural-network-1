@@ -1,8 +1,8 @@
-from training.softmax_nn import SoftmaxNeuralNetwork
-from preprocess.data_preprocess import DataCollector
-from postpreprocess.data_visualization import DataVisualizationWithLabels
+from problem_1_classifications.training.softmax_nn import SoftmaxNeuralNetwork
+from problem_1_classifications.preprocess.data_preprocess import DataCollector
+from problem_1_classifications.postpreprocess.data_visualization import DataVisualizationWithLabels
 
-from postpreprocess.data_visualization import DataVisualization
+from problem_1_classifications.postpreprocess.data_visualization import DataVisualization
 
 if __name__ == "__main__":
     # visualize

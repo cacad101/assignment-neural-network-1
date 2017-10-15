@@ -1,7 +1,7 @@
 import numpy as np
 import theano
 import theano.tensor as T
-from common.time_executor import get_execution_time
+from problem_1_classifications.common.time_executor import get_execution_time
 
 
 # by specifying [10] as the hidden_layer_neuron implies using 1 hidden layer with 10 neurons
