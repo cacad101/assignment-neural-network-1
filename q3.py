@@ -47,8 +47,6 @@ def main():
                 hidden_neurons = hidden_neurons,
                 learning_rate = learning_rate
             )
-            # TODO:
-            # Plot K-fold graphs
 
         else:
             nn.set_x_train(preprocessor.train_x)
