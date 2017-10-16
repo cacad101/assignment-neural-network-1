@@ -1,5 +1,5 @@
 # CZ4042 Neural Network - Assignment 1
-Part B: Approximation Problem
+Part A: Classification Problem
 
 ## Getting Started
 
