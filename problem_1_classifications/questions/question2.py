@@ -17,7 +17,7 @@ if __name__ == "__main__":
     list_batch = [4, 8, 16, 32, 64]
     list_execution_time = []
 
-    epochs = 10
+    epochs = 1000
 
     costs = []
     predictions = []
@@ -84,5 +84,5 @@ if __name__ == "__main__":
     data_visualization.show_plot(
         list_x_point=list_batch, list_y_point=list_execution_time,
         x_label="batch_size", y_label="execution_time", title="Execution Time Comparison",
-        figure_name="./image/classification/2/execution_time_comparison.png",
+        figure_name="../image/classification/2/execution_time_comparison.png",
     )

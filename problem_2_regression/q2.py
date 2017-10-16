@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Question 2:
 Find the optimal learning rate for the 3-layer network designed. Set this as 
@@ -14,6 +15,7 @@ import numpy as np
 from housing_preprocessing.preprocess import Preprocessor
 from housing_training.approximation import Approximation
 from housing_visualization.visualization import plot_graph
+
 
 def main():
     print("Start Question 2")

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Question 4:
 Design a four-layer neural network and a five-layer neural network, with the first hidden
@@ -11,6 +12,7 @@ import numpy as np
 from housing_preprocessing.preprocess import Preprocessor
 from housing_training.approximation import Approximation
 from housing_visualization.visualization import plot_graph
+
 
 def main():
     print("Start Question 4")

@@ -14,7 +14,7 @@ if __name__ == "__main__":
 
     list_neurons = [5, 10, 15, 20, 25]
     batch_size = 16
-    epochs = 100
+    epochs = 1000
 
     costs = []
     predictions = []

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Question 5:
 Additionally, the project report should contain:

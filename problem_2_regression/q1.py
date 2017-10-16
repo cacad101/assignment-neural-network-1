@@ -1,17 +1,19 @@
-"""
+# -*- coding: utf-8 -*-
+'''
 Question 1:
 Design a 3-layer feedforward neural network consisting of a hidden-layer of 30 neurons.
 Use mini-batch gradient descent (with batch size of 32 and learning rate alpha = 10e−4) to
 train the network. Use up to about 1000 epochs for this problem.
 a) Plot the training error against number of epochs for the 3-layer network.
 b) Plot the final test errors of prediction by the network.
-"""
+'''
 
 import numpy as np
 
 from housing_preprocessing.preprocess import Preprocessor
 from housing_training.approximation import Approximation
 from housing_visualization.visualization import plot_graph
+
 
 def main():
     print("Start Question 1")

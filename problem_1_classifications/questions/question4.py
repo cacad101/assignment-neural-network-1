@@ -13,8 +13,8 @@ if __name__ == "__main__":
 
     learning_decays = [0, 1e-3, 1e-6, 1e-9, 1e-12]
     batch_size = 16
-    epochs = 100
-    list_neurons_hidden_layer = [10]
+    epochs = 1000
+    list_neurons_hidden_layer = [15]
 
     costs = []
     predictions = []
